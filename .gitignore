@@ -102,3 +102,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+*.sqlite3
+*.pyc
+
+/static/
+/node_modules/
+package-lock.json
+db.sqlite3*
+.vscode/
+/logs/*
+.idea
