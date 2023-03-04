@@ -1,20 +1,40 @@
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
-
+from airflow.utils.dates import days_ago
 from datetime import datetime
+from datetime import timedelta
 
 default_args = {
-    'start_date': datetime(2019, 1, 1),
-    'owner': 'Airflow',
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'email': ['airflow@example.com'],
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 0,
+    'retry_delay': timedelta(minutes=1)
 }
 
 def process(p1):
     print(p1)
     return 'done'
 
-with DAG(dag_id='parallel_dag', schedule_interval='0 0 * * *', default_args=default_args, catchup=False) as dag:
+with DAG(
+        'Parallel-DAG',
+        default_args=default_args,
+        description='Parallel-DAG to migrate statistics data',
+        schedule=None,
+        start_date=days_ago(1),
+        tags=['Parallel-DAG'],
+        params={}
 
-    task_4 = PythonOperator(task_id='task_4', python_callable=process, op_args=['my super parameter'])
-task_4
+) as dag:
+    t1 = PythonOperator(
+        task_id='parallel-task',
+        depends_on_past=False,
+        python_callable=process,
+        retries=0,
+    )
+
+    t1
         
