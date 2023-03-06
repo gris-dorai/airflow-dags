@@ -15,8 +15,8 @@ default_args = {
     'retry_delay': timedelta(minutes=1)
 }
 
-def process(p1):
-    print(p1)
+def process(**kwargs):
+    print("hello")
     return 'done'
 
 with DAG(
